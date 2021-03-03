@@ -83,7 +83,7 @@ int main() {
     goe->setInformation(Matrix3d::Identity() / noiseSigma);
     optimizer.addEdge(goe);
   }
-
+optimizer.save("static_target.g2o");
   // Configure and set things going
   optimizer.initializeOptimization();
   optimizer.setVerbose(true);

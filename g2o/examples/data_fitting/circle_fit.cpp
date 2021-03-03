@@ -143,7 +143,7 @@ int main(int argc, char** argv) {
     e->setMeasurement(points[i]);
     optimizer.addEdge(e);
   }
-
+optimizer.save("circle.g2o");
   // perform the optimization
   optimizer.initializeOptimization();
   optimizer.setVerbose(verbose);

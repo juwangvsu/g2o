@@ -6,10 +6,12 @@
 #include "g2o/core/linear_solver.h"
 #include "g2o/core/optimization_algorithm_factory.h"
 #include "g2o/types/slam3d/types_slam3d.h"
+#include "g2o/types/slam2d/types_slam2d.h"
 #include "g2o/types/slam3d_addons/types_slam3d_addons.h"
 #include "g2o/stuff/macros.h"
 #include "g2o/stuff/command_args.h"
 #include "g2o/stuff/sampler.h"
+#include "../tutorial_slam2d/vertex_point_xy.h"
 
 using namespace g2o;
 using namespace std;
@@ -246,6 +248,39 @@ int main (int argc, char** argv) {
   double lambdaInit;
   string strSolver;
   CommandArgs arg;
+  SparseOptimizer* gg = new SparseOptimizer();
+/*
+  auto linearSolver = g2o::make_unique<SlamLinearSolver>();
+  linearSolver->setBlockOrdering(false);
+  OptimizationAlgorithmGaussNewton* solver = new OptimizationAlgorithmGaussNewton(
+  g2o::make_unique<SlamBlockSolver>(std::move(linearSolver)));
+*/
+  OptimizationAlgorithmFactory* solverFactory1 = OptimizationAlgorithmFactory::instance();
+  OptimizationAlgorithmProperty solverProperty1;
+  OptimizationAlgorithm* solver1 = solverFactory1->construct(strSolver, solverProperty1);
+
+  gg->setAlgorithm(solver1);
+
+  Robot* r2 = new Robot(gg);
+  Isometry3d sp2 = Isometry3d::Identity();
+  LineSensor* ls2 = new LineSensor(r2,0, sp2);
+//  gg->load("line3d.g2o");
+  VertexSE3 * vse3 = new VertexSE3;
+    vse3->setId(1);
+    gg->addVertex(vse3);
+      VertexSE2* robot =  new VertexSE2;
+    robot->setId(200);
+    const SE2 t;
+    robot->setEstimate(t);
+    gg->addVertex(robot);
+    //gg->addVertex(robot);
+VertexPointXY * pxy = new VertexPointXY;
+    pxy->setId(255);
+    gg->addVertex(pxy);
+  cout << "#1 Graph loaded with " << gg->vertices().size() << " vertices \n";
+  gg->save("line3d_1.g2o");
+
+  return 0;
   arg.param("i", maxIterations, 10, "perform n iterations");
   arg.param("v", verbose, false, "verbose output of the optimization process");
   arg.param("solver", strSolver, "lm_var", "select one specific solver");
@@ -283,12 +318,18 @@ int main (int argc, char** argv) {
 
   std::cout << "Creating robot" << std::endl;
   Robot* r = new Robot(g);
+  
+  g->clear();
+  g->load("line3d.g2o");
+  cout << "#2 Graph loaded with " << g->vertices().size() << " vertices \n";
 
   std::cout << "Creating line sensor" << std::endl;
   Isometry3d sensorPose = Isometry3d::Identity();
+  return 0;
   LineSensor* ls = new LineSensor(r, 0, sensorPose);
+
+
   ls->_nline << 0.001, 0.001, 0.001, 0.0001;
-  // ls->_nline << 1e-9, 1e-9, 1e-9, 1e-9;
   r->_sensors.push_back(ls);
   sim->_robots.push_back(r);
 
@@ -301,6 +342,7 @@ int main (int argc, char** argv) {
   static_cast<VertexLine3D*>(li->vertex())->setEstimate(line);
   li->vertex()->setFixed(fixLines);
   sim->_world.insert(li);
+  
 
   std::cout << "Creating landmark line 2" << std::endl;
   liv << 5.0, 0.0, 0.0, 0.0, 0.0, 1.0;
@@ -394,7 +436,13 @@ int main (int argc, char** argv) {
 
   ofstream osp("line3d.g2o");
   g->save(osp);
+
+
   std::cout << "Saved graph on file line3d.g2o, use g2o_viewer to work with it." << std::endl;
+
+//  SparseOptimizer* gg = new SparseOptimizer();
+//  gg->load("line3d.g2o");
+ // cout << "Graph loaded with " << gg->vertices().size() << " vertices \n";
 
   return 0;
 }

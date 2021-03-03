@@ -89,7 +89,17 @@ int main()
     optimizer.addVertex(robot);
   }
   cerr << "done." << endl;
-
+    EdgeSE2* odometry = new EdgeSE2;
+    const Simulator::GridEdge& simEdge = simulator.odometry()[0];
+    odometry->vertices()[0] = optimizer.vertex(0);
+   // odometry->vertices()[0] = optimizer.vertex(simEdge.from);
+    odometry->vertices()[1] = optimizer.vertex(16);
+    //odometry->vertices()[1] = optimizer.vertex(simEdge.to);
+    //odometry->setMeasurement(simEdge.simulatorTransf);
+    //odometry->setInformation(simEdge.information);
+    optimizer.addEdge(odometry);
+  //optimizer.save("tutorial_before.g2o");
+  //return 0;
   // second add the odometry constraints
   cerr << "Optimization: Adding odometry measurements ... ";
   for (size_t i = 0; i < simulator.odometry().size(); ++i) {
@@ -103,6 +113,8 @@ int main()
     optimizer.addEdge(odometry);
   }
   cerr << "done." << endl;
+  //optimizer.save("tutorial_before.g2o");
+  //return 0;
 
   // add the landmark observations
   cerr << "Optimization: add landmark vertices ... ";

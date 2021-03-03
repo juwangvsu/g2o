@@ -3,5 +3,6 @@
 # set_target_properties(line_test PROPERTIES OUTPUT_NAME line_test${EXE_POSTFIX})
 
 add_executable(simulator_3d_line simulator_3d_line.cpp)
-target_link_libraries(simulator_3d_line solver_eigen types_slam3d_addons)
+#target_link_libraries(simulator_3d_line solver_eigen )
+target_link_libraries(simulator_3d_line solver_eigen types_slam2d types_slam3d_addons)
 set_target_properties(simulator_3d_line PROPERTIES OUTPUT_NAME simulator_3d_line${EXE_POSTFIX})

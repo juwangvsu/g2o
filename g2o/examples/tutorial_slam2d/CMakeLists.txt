@@ -10,7 +10,7 @@ add_library(tutorial_slam2d_library ${G2O_LIB_TYPE}
 
 set_target_properties(tutorial_slam2d_library PROPERTIES OUTPUT_NAME ${LIB_PREFIX}tutorial_slam2d)
 
-target_link_libraries(tutorial_slam2d_library core solver_eigen)
+target_link_libraries(tutorial_slam2d_library core solver_eigen opengl_helper ${OPENGL_gl_LIBRARY})
 
 add_executable(tutorial_slam2d
   tutorial_slam2d.cpp

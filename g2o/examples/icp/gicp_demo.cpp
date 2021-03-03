@@ -165,7 +165,7 @@ int main()
   cout << "Initial chi2 = " << FIXED(optimizer.chi2()) << endl;
 
   optimizer.setVerbose(true);
-
+  optimizer.save("icp.g2o");
   optimizer.optimize(5);
 
   cout << endl << "Second vertex should be near 0,0,1" << endl;

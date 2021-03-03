@@ -21,6 +21,7 @@
 
 #include "g2o/core/sparse_optimizer.h"
 #include "g2o/core/estimate_propagator.h"
+#include "g2o/core/hyper_graph_action.h"
 
 #include <QFileDialog>
 

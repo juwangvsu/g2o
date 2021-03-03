@@ -58,6 +58,17 @@ namespace g2o {
         virtual bool write(std::ostream& os) const;
 
     };
+  class G2O_TUTORIAL_SLAM2D_API VertexSE2DrawAction: public DrawAction{
+  public:
+    VertexSE2DrawAction();
+    virtual HyperGraphElementAction* operator()(HyperGraph::HyperGraphElement* element,
+            HyperGraphElementAction::Parameters* params_ );
+  protected:
+    HyperGraphElementAction* _drawActions;
+    virtual bool refreshPropertyPtrs(HyperGraphElementAction::Parameters* params_);
+    FloatProperty* _triangleX, *_triangleY;
+
+  };
 
   } // end namespace
 } // end namespace

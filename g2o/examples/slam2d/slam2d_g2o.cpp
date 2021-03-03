@@ -26,6 +26,8 @@
 #include "g2o/core/sparse_optimizer.h"
 #include "g2o/solvers/eigen/linear_solver_eigen.h"
 #include "main_window.h"
+#include "g2o/types/slam3d_addons/types_slam3d_addons.h"
+
 using namespace std;
 using namespace g2o;
 
